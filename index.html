@@ -1,145 +1,470 @@
-<style>
-  body {
-      background-color: #ffffff !important;
-      color: #111111 !important;
-  }
-  .btn.secondary {
-      background-color: #0056b3 !important;
-      color: #ffffff !important;
-      padding: 12px 24px;
-      border: none;
-      border-radius: 6px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-  }
-  .btn.secondary:hover {
-      background-color: #004085 !important;
-  }
-</style>
-<div class="form-row">
-  <input type="text" id="firstName" placeholder="الإسم" required />
-  <input type="text" id="lastName" placeholder="الكنية" required />
-</div>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MED-SHOP | المتجر المتكامل للفخامة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f9f9f9;
+            --card-bg: #ffffff;
+            --text-main: #111111;
+            --text-muted: #666666;
+            --accent-green: #00875a;
+            --border-color: #e5e5e5;
+        }
 
-<div class="form-row">
-  
-  <input type="tel" id="phone" placeholder="رقم الهاتف (مع رمز البلد، مثال +2126...)" required />
-  <input type="email" id="email" placeholder="البريد الإلكتروني (اختياري)" />
-</div>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+        }
 
-<div class="form-row">
-  <textarea id="notes" rows="3" placeholder="ملاحظات إضافية"></textarea>
-</div>
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            scroll-behavior: smooth;
+        }
 
-<div class="summary" id="orderSummary">لم تختَر منتجاً بعد.</div>
+        header {
+            background-color: #000000;
+            color: #ffffff;
+            text-align: center;
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
 
-<div class="send-group">
-  <button type="button" id="sendMail" class="btn">إرسال عبر البريد الإلكتروني</button>
-  <button type="button" id="sendWhats" class="btn secondary">إرسال عبر WhatsApp</button>
-  <button type="reset" class="btn" style="background:#e0e0e0;color:#000">إعادة تعيين</button>
-</div>
-<div style="margin-top:8px"><small>ملاحظة: زر البريد يفتح برنامج البريد الافتراضي (mailto). زر WhatsApp يفتح محادثة WhatsApp Web/تطبيق.</small></div>
+        .shipping-bar {
+            background-color: #111111;
+            color: #ffffff;
+            font-size: 13px;
+            padding: 7px 0;
+            text-align: center;
+            font-weight: 600;
+        }
 
+        nav {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            background: #ffffff;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 77px;
+            z-index: 99;
+        }
 
-<script>
-// دالة لتحديث ملخص الطلب في الفورم
-function updateOrderSummaryInForm() {
-    const summaryDiv = document.getElementById('orderSummary');
-    if (typeof cart === 'undefined' || cart.length === 0) {
-        summaryDiv.innerHTML = "لم تختَر منتجاً بعد.";
-        return;
-    }
-    
-    let total = 0;
-    let itemsText = "<strong>المنتجات المختارة:</strong><br>";
-    
-    cart.forEach((item, index) => {
-        itemsText += `- ${item.name} (${item.price}$)<br>`;
-        total += item.price;
-    });
-    
-    itemsText += `<br><strong>المجموع الإجمالي: ${total}$</strong>`;
-    summaryDiv.innerHTML = itemsText;
-}
+        nav a {
+            color: var(--text-main);
+            padding: 12px 18px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+        }
 
-// تعديل الدالة القديمة باش تحدث الملخص فاش يتزاد شي برودوي
-if (typeof addToCart !== 'undefined') {
-    const originalAddToCart = addToCart;
-    addToCart = function(productId) {
-        originalAddToCart(productId);
-        updateOrderSummaryInForm();
-    };
-}
+        nav a:hover {
+            border-bottom: 3px solid #000000;
+        }
 
-// تفعيل تحديث الملخص عند تحميل الصفحة
-document.addEventListener('DOMContentLoaded', () => {
-    setTimeout(updateOrderSummaryInForm, 500);
-});
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
 
-// دالة لتجميع نص الرسالة
-function generateOrderMessage() {
-    const firstName = document.getElementById('firstName').value.trim();
-    const lastName = document.getElementById('lastName').value.trim();
-    const phone = document.getElementById('phone').value.trim();
-    const email = document.getElementById('email').value.trim() || "غير محدد";
-    const notes = document.getElementById('notes').value.trim() || "لا توجد";
+        .main-section-title {
+            text-align: center;
+            font-size: 26px;
+            margin: 40px 0 20px 0;
+            color: #000000;
+            position: relative;
+        }
+        
+        .main-section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background: #000000;
+            margin: 8px auto 0 auto;
+        }
 
-    if (!firstName || !lastName || !phone) {
-        alert("المرجو ملء الخانات الإجبارية: الإسم، الكنية، ورقم الهاتف.");
-        return null;
-    }
+        .category-title {
+            font-size: 19px;
+            margin: 25px 0 15px 0;
+            border-right: 4px solid #555555;
+            padding-right: 10px;
+            color: #333;
+        }
 
-    if (typeof cart === 'undefined' || cart.length === 0) {
-        alert("سلتك فارغة! المرجو إضافة منتجات أولاً.");
-        return null;
-    }
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
 
-    let total = 0;
-    let productsList = "";
-    cart.forEach(item => {
-        productsList += `- ${item.name} (${item.price}$)\n`;
-        total += item.price;
-    });
+        @media (min-width: 768px) {
+            .products-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
 
-    let message = `*طلب جديد من الموقع* 🛒\n\n`;
-    message += `👤 *الزبون:* ${firstName} ${lastName}\n`;
-    message += `📞 *الهاتف:* ${phone}\n`;
-    message += `📧 *الإيميل:* ${email}\n`;
-    message += `📝 *ملاحظات:* ${notes}\n\n`;
-    message += `📦 *المنتجات:*\n${productsList}\n`;
-    message += `💰 *المجموع الإجمالي:* ${total}$`;
+        .product-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-2px);
+        }
 
-    return { message, total };
-}
+        .product-image {
+            width: 100%;
+            aspect-ratio: 1/1;
+            object-fit: cover;
+            border-radius: 2px;
+        }
 
-// --- إرسال عبر WhatsApp ---
-document.getElementById('sendWhats').addEventListener('click', () => {
-    const order = generateOrderMessage();
-    if (!order) return;
+        .product-info {
+            margin-top: 10px;
+            text-align: right;
+        }
 
-    // ⚠️ بدّل هاد النمرة بنمرتك الشخصية (خاص تبدا بـ 212 بلا + وبلا أصفار)
-    const myWhatsAppNumber = "212600000000"; 
-    
-    const encodedMessage = encodeURIComponent(order.message);
-    const whatsappUrl = `https://wa.me/${myWhatsAppNumber}?text=${encodedMessage}`;
-    
-    window.open(whatsappUrl, '_blank');
-});
+        .product-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 5px;
+            min-height: 44px;
+        }
 
-// --- إرسال عبر البريد الإلكتروني ---
-document.getElementById('sendMail').addEventListener('click', () => {
-    const order = generateOrderMessage();
-    if (!order) return;
+        .product-price {
+            font-size: 16px;
+            font-weight: 700;
+            color: #111111;
+            margin-bottom: 10px;
+        }
 
-    // ⚠️ بدّل هاد الإيميل بإيميلك الشخصي
-    const myEmail = "your-email@example.com"; 
-    
-    const subject = encodeURIComponent("طلب شراء جديد من الموقع");
-    const body = encodeURIComponent(order.message);
-    
-    const mailtoUrl = `mailto:${myEmail}?subject=${subject}&body=${body}`;
-    
-    window.location.href = mailtoUrl;
-});
-</script>
+        .order-btn {
+            background-color: var(--accent-green);
+            color: #ffffff;
+            border: none;
+            width: 100%;
+            padding: 12px 0;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 15px;
+        }
+
+        .modal-content {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 450px;
+            padding: 25px;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .order-summary {
+            background-color: #f0f0f0;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .submit-btn {
+            background-color: #000000;
+            color: #ffffff;
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 700;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="shipping-bar">الدفع عند الاستلام والتوصيل مجاني فالمغرب 🇲🇦</div>
+
+    <header>
+        <h1>MED-SHOP</h1>
+    </header>
+
+    <nav>
+        <a href="#bags-section">قسم الحقائب</a>
+        <a href="#shoes-section">الأحذية الرياضية</a>
+        <a href="#watches-section">الساعات والأكسسوارات</a>
+    </nav>
+
+    <div class="container">
+
+        <!-- ==================== قسم الحقائب والسيكان ==================== -->
+        <div id="bags-section">
+            <h2 class="main-section-title">تشكيلة الحقائب الفاخرة</h2>
+            
+            <h3 class="category-title">المجموعة الجديدة حصرية</h3>
+            <div class="products-grid">
+                
+                <div class="product-card">
+                    <img src="image_18.png" alt="Chanel White Classic" class="product-image">
+                    <div class="product-info">
+                        <div class="product-name">صاك Chanel الكلاسيكي المبطن باللون الأبيض الراقي</div>
+                        <div class="product-price">399.00 درهم</div>
+                        <button class="order-btn" onclick="openOrderModal('صاك Chanel الأبيض الفاخر', '399.00 درهم')">إضغط هنا للطلب</button>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <img src="image_19.png" alt="COIH 2DN Brown" class="product-image">
+                    <div class="product-info">
+                        <div class="product-name">صاك COIH 2DN العصري باللون البني دبل هاند</div>
+                        <div class="product-price">289.00 درهم</div>
+                        <button class="order-btn" onclick="openOrderModal('صاك COIH 2DN بني', '289.00 درهم')">إضغط هنا للطلب</button>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <img src="image_20.png" alt="COIH 2DN Black" class="product-image">
+                    <div class="product-info">
+                        <div class="product-name">صاك COIH 2DN البرستيج باللون الأسود الملكي</div>
+                        <div class="product-price">289.00 درهم</div>
+                        <button class="order-btn" onclick="openOrderModal('صاك COIH 2DN أسود', '289.00 درهم')">إضغط هنا للطلب</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <h3 class="category-title">سيكان اليد والكتف المتميزة</h3>
+            <div class="products-grid">
+                <div class="product-card">
+                    <img src="image_5.png" alt="Coach Handbag" class="product-image">
+                    <div class="product-info">
+                        <div class="product-name">صاك Coach كلاسيكي متعدد الألوان والأناقة</div>
+                        <div class="product-price">299.00 درهم</div>
+                        <button class="order-btn" onclick="openOrderModal('صاك Coach كلاسيكي', '299.00 درهم')">إضغط هنا للطلب</button>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <img src="image_8.png" alt="Christian Dior" class="product-image">
+                    <div class="product-info">
+                        <div class="product-name">صاك Christian Dior الوردي الراقي</div>
+                        <div class="product-price">349.00 درهم</div>
+                        <button class="order-btn" onclick="openOrderModal('صاك Christian Dior الوردي', '349.00 درهم')">إضغط هنا للطلب</button>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <img src="image_9.png" alt="Aldo Handbag" class="product-image">
+                    <div class="product-info">
+                        <div class="product-name">صاك ALDO الأبيض الأنيق بلمسة ورود ربيعية</div>
+                        <div class="product-price">299.00 درهم</div>
+                        <button class="order-btn" onclick="openOrderModal('صاك ALDO الأبيض بالورود', '299.00 درهم')">إضغط هنا للطلب</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== قسم الأحذية الرياضية ==================== -->
+        <div id="shoes-section">
+            <h2 class="main-section-title">الأحذية الرياضية (Sneakers)</h2>
+            <div class="products-grid">
+                
+                <div class="product-card">
+                    <img src="image_17.png" alt="Nike Air Force 1 Classic" class="product-image">
+                    <div class="product-info">
+                        <div class="product-name">حذاء Nike Air Force 1 الأصلي باللون الأبيض الناصع</div>
+                        <div class="product-price">329.00 درهم</div>
+                        <button class="order-btn" onclick="openOrderModal('حذاء Nike Air Force 1 كلاسيك', '329.00 درهم')">إضغط هنا للطلب</button>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <img src="image_15.png" alt="Nike Air Force 1 Premium" class="product-image">
+                    <div class="product-info">
+                        <div class="product-name">حذاء Nike Air Force 1 (تفاصيل النعل والجلد المريح)</div>
+                        <div class="product-price">329.00 درهم</div>
+                        <button class="order-btn" onclick="openOrderModal('حذاء Nike Air Force 1 مريح', '329.00 درهم')">إضغط هنا للطلب</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ==================== قسم الساعات والأكسسوارات ==================== -->
+        <div id="watches-section">
+            <h2 class="main-section-title">الساعات والأكسسوارات الفاخرة</h2>
+            <div class="products-grid">
+                
+                <div class="product-card">
+                    <img src="image_16.png" alt="Smart Watch Ultra Box" class="product-image">
+                    <div class="product-info">
+                        <div class="product-name">باكدج الساعة الذكية Ultra متكاملة مع 5 صمطات وكفر حماية</div>
+                        <div class="product-price">249.00 درهم</div>
+                        <button class="order-btn" onclick="openOrderModal('باكدج ساعة Ultra الذكية', '249.00 درهم')">إضغط هنا للطلب</button>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <img src="image_21.png" alt="Cartier Luxury Set" class="product-image">
+                    <div class="product-info">
+                        <div class="product-name">طاقم ساعة Cartier الذهبية الفاخرة مع أساور Van Cleef البرستيج</div>
+                        <div class="product-price">399.00 درهم</div>
+                        <button class="order-btn" onclick="openOrderModal('طاقم ساعة Cartier وأساور', '399.00 درهم')">إضغط هنا للطلب</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- فورم COD السريع -->
+    <div class="modal" id="orderModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeOrderModal()">&times;</span>
+            <div class="modal-title">لإتمام طلبك، يرجى ملء الاستمارة</div>
+            
+            <div class="order-summary">
+                <span id="modalProductName" style="font-weight: 600;">اسم المنتج</span>
+                <span id="modalProductPrice" style="color: var(--accent-green); font-weight: 700;">0.00 درهم</span>
+            </div>
+
+            <form id="codForm" onsubmit="sendToWhatsApp(event)">
+                <div class="form-group">
+                    <label>الاسم الكامل *</label>
+                    <input type="text" id="userName" placeholder="الاسم والنسب" required>
+                </div>
+                <div class="form-group">
+                    <label>رقم الهاتف *</label>
+                    <input type="tel" id="userPhone" placeholder="رقم الهاتف" required>
+                </div>
+                <div class="form-group">
+                    <label>المدينة *</label>
+                    <input type="text" id="userCity" placeholder="المدينة" required>
+                </div>
+                <div class="form-group">
+                    <label>العنوان الكامل</label>
+                    <input type="text" id="userAddress" placeholder="العنوان أو الحي">
+                </div>
+                <button type="submit" class="submit-btn">تأكيد الطلب عبر الواتساب</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const myWhatsAppNumber = "212608256020"; 
+
+        let selectedProduct = "";
+        let selectedPrice = "";
+
+        function openOrderModal(name, price) {
+            selectedProduct = name;
+            selectedPrice = price;
+            document.getElementById('modalProductName').innerText = name;
+            document.getElementById('modalProductPrice').innerText = price;
+            document.getElementById('orderModal').style.display = 'flex';
+        }
+
+        function closeOrderModal() {
+            document.getElementById('orderModal').style.display = 'none';
+        }
+
+        function sendToWhatsApp(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('userName').value;
+            const phone = document.getElementById('userPhone').value;
+            const city = document.getElementById('userCity').value;
+            const address = document.getElementById('userAddress').value || "لم يذكر";
+
+            const message = `سلام عليكم MED-SHOP، بغيت نكوموندي:\n\n` +
+                            `🛍️ *المنتج:* ${selectedProduct}\n` +
+                            `💰 *الثمن:* ${selectedPrice}\n\n` +
+                            `👤 *معلومات الزبون:*\n` +
+                            `• *الاسم:* ${name}\n` +
+                            `• *الهاتف:* ${phone}\n` +
+                            `• *المدينة:* ${city}\n` +
+                            `• *العنوان:* ${address}\n\n` +
+                            `المرجو تأكيد الطلبية وشكراً.`;
+
+            const whatsappUrl = `https://wa.me/${myWhatsAppNumber}?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+            closeOrderModal();
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('orderModal');
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>
