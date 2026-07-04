@@ -3,181 +3,381 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Med.shop | المتجر الاحترافي</title>
+    <title>متجر المنتجات الفاخرة | Boutique de Luxe</title>
     <style>
         :root {
-            --primary-color: #d4af37; /* اللون الذهبي */
-            --bg-dark: #0a0a0a;
-            --card-bg: #141414;
-            --text-color: #ffffff;
-            --btn-color: #2ecc71; /* لون زر طلب الآن الأخضر */
+            --primary-color: #111;
+            --accent-color: #c9a054; /* لون ذهبي خفيف بحال هادري */
+            --bg-color: #fcfcfc;
+            --card-bg: #ffffff;
+            --text-main: #222;
+            --text-muted: #666;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: all 0.3s ease;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-dark);
-            color: var(--text-color);
-            padding: 20px;
-            line-height: 1.6;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding-bottom: 50px;
         }
 
-        .container {
+        /* هيدر التوصيل */
+        .shipping-bar {
+            background-color: var(--primary-color);
+            color: #fff;
+            text-align: center;
+            padding: 8px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        /* بار تغيير اللغة */
+        .lang-switcher {
+            display: flex;
+            justify-content: flex-end;
+            padding: 15px 5%;
+            background: #fff;
+            border-bottom: 1px solid #eee;
+        }
+
+        .lang-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 4px;
+        }
+
+        .lang-btn:hover {
+            background: var(--accent-color);
+        }
+
+        /* عنوان الصفحة الرئيسي */
+        .main-title {
+            text-align: center;
+            margin: 40px auto 20px;
+            font-size: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* شبكة المنتجات */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
             max-width: 1200px;
             margin: 0 auto;
+            padding: 20px;
         }
 
-        header {
+        /* كارت المنتج */
+        .product-card {
+            background: var(--card-bg);
+            border: 1px solid #eee;
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        .image-container {
+            width: 100%;
+            height: 350px;
+            background: #f9f9f9;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 15px;
-            padding: 20px 0;
-            margin-bottom: 30px;
-            border-bottom: 2px solid var(--primary-color);
+            overflow: hidden;
         }
 
-        .brand-logo {
-            width: 65px;
-            height: 65px;
-            object-fit: cover;
-            border-radius: 50%;
-            border: 2px solid var(--primary-color);
-        }
-
-        header h1 {
-            color: var(--primary-color);
-            font-size: 2.2rem;
-        }
-
-        .table-container {
-            overflow-x: auto;
-            background-color: var(--card-bg);
-            border-radius: 12px;
-            border: 1px solid #222;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
-        }
-
-        table {
+        .image-container img {
             width: 100%;
-            border-collapse: collapse;
-            text-align: right;
-        }
-
-        th, td {
-            padding: 18px;
-            border-bottom: 1px solid #222;
-            vertical-align: middle;
-        }
-
-        th {
-            background-color: rgba(212, 175, 55, 0.05);
-            color: var(--primary-color);
-            font-weight: bold;
-            font-size: 1.1rem;
-        }
-
-        tr:hover {
-            background-color: rgba(255, 255, 255, 0.02);
-        }
-
-        .product-img {
-            width: 65px;
-            height: 65px;
+            height: 100%;
             object-fit: cover;
-            border-radius: 8px;
-            border: 1px solid #333;
         }
 
-        .price {
+        .product-info {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .brand-badge {
+            align-self: flex-start;
+            background: #f0f0f0;
             color: var(--primary-color);
+            padding: 4px 10px;
+            font-size: 12px;
             font-weight: bold;
-            font-size: 1.1rem;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            border-radius: 3px;
         }
 
-        /* زر طلب الآن الواضح */
-        .order-btn {
-            display: inline-block;
-            background-color: var(--btn-color);
+        .product-name {
+            font-size: 18px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .product-desc {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+            line-height: 1.5;
+            flex-grow: 1;
+        }
+
+        .price-tag {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 15px;
+        }
+
+        /* أزرار الطلب بحال هادري بارفان */
+        .btn-order {
+            background-color: var(--primary-color);
             color: white;
-            text-decoration: none;
-            padding: 8px 18px;
-            border-radius: 6px;
+            border: 2px solid var(--primary-color);
+            padding: 12px;
+            text-align: center;
             font-weight: bold;
-            font-size: 0.95rem;
-            transition: background 0.2s;
-            text-align: center;
-            box-shadow: 0 4px 10px rgba(46, 204, 113, 0.2);
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 4px;
+            width: 100%;
         }
 
-        .order-btn:hover {
-            background-color: #27ae60;
+        .btn-order:hover {
+            background-color: transparent;
+            color: var(--primary-color);
         }
 
-        footer {
-            text-align: center;
-            padding: 40px 0;
-            margin-top: 40px;
-            color: #666;
-            font-size: 0.9rem;
-            border-top: 1px solid #222;
+        /* تغيير الاتجاه حسب اللغة */
+        html[dir="ltr"] .brand-badge {
+            align-self: flex-start;
+        }
+        html[dir="rtl"] .brand-badge {
+            align-self: flex-start;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <header>
-            <!-- اللوغو ديالك -->
-            <img src="image.png" alt="Med.shop" class="brand-logo">
-            <h1>Med.shop</h1>
-        </header>
+    <!-- بار التوصيل الفوقاني -->
+    <div class="shipping-bar" id="shippingBar">التوصيل مجاني ابتداءً من 200 درهم</div>
 
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>صورة المنتج</th>
-                        <th>اسم المنتج</th>
-                        <th>القسم</th>
-                        <th>الثمن</th>
-                        <th>الطلب</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    
-                    <!-- المنتج 1 -->
-                    <tr>
-                        <td><img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=150&auto=format&fit=crop" alt="حقيبة" class="product-img"></td>
-                        <td>حقيبة ظهر جلدية احترافية</td>
-                        <td>حقائب</td>
-                        <td class="price">290 درهم</td>
-                        <td><a href="https://wa.me/212600000000?text=بغيت%20نطلب%20حقيبة%20الظهر" target="_blank" class="order-btn">طلب الآن</a></td>
-                    </tr>
-                    
-                    <!-- المنتج 2 -->
-                    <tr>
-                        <td><img src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=150&auto=format&fit=crop" alt="حقيبة" class="product-img"></td>
-                        <td>حقيبة يد أنيقة</td>
-                        <td>حقائب</td>
-                        <td class="price">400 درهم</td>
-                        <td><a href="https://wa.me/212600000000?text=بغيت%20نطلب%20حقيبة%20اليد" target="_blank" class="order-btn">طلب الآن</a></td>
-                    </tr>
-
-                </tbody>
-            </table>
-        </div>
+    <!-- زر تحويل اللغة -->
+    <div class="lang-switcher">
+        <button class="lang-btn" id="langBtn" onclick="toggleLanguage()">Français</button>
     </div>
 
-    <footer>
-        <p>&copy; 2026 Med.shop. جميع الحقوق محفوظة.</p>
-    </footer>
+    <!-- عنوان الصفحة -->
+    <h1 class="main-title" id="mainTitle">المجموعة الحصرية</h1>
 
+    <!-- شبكة المنتجات كاملة -->
+    <div class="products-grid">
+
+        <!-- المنتج 1 -->
+        <div class="product-card">
+            <div class="image-container">
+                <img src="image.png" alt="Nike Air Force 1">
+            </div>
+            <div class="product-info">
+                <span class="brand-badge">Nike</span>
+                <h3 class="product-name" data-ar="حذاء نايكي إير فورس 1" data-fr="Nike Air Force 1">حذاء نايكي إير فورس 1</h3>
+                <p class="product-desc" data-ar="حذاء رياضي باللون الأبيض الناصع، مريح وأنيق يناسب جميع الإطلالات اليومية." data-fr="Baskets de couleur blanche classique, confortables et stylées, parfaites pour un look quotidien.">حذاء رياضي باللون الأبيض الناصع، مريح وأنيق يناسب جميع الإطلالات اليومية.</p>
+                <div class="price-tag">140 DH</div>
+                <button class="btn-order" data-ar="اشتري الآن" data-fr="Commander maintenant">اشتري الآن</button>
+            </div>
+        </div>
+
+        <!-- المنتج 2 -->
+        <div class="product-card">
+            <div class="image-container">
+                <img src="image_2.png" alt="Louis Vuitton Alma">
+            </div>
+            <div class="product-info">
+                <span class="brand-badge">Louis Vuitton</span>
+                <h3 class="product-name" data-ar="حقيبة لويس فيتون ألما" data-fr="Louis Vuitton Alma">حقيبة لويس فيتون ألما</h3>
+                <p class="product-desc" data-ar="حقائب يد بموديل ألما الأنيق، متوفرة بنقشة المونوغرام الكلاسيكية ونقشة المربعات الفاخرة." data-fr="Sacs à main modèle Alma, disponibles en motif monogramme classique et motif damier élégant.">حقائب يد بموديل ألما الأنيق، متوفرة بنقشة المونوغرام الكلاسيكية ونقشة المربعات الفاخرة.</p>
+                <div class="price-tag">140 DH</div>
+                <button class="btn-order" data-ar="اشتري الآن" data-fr="Commander maintenant">اشتري الآن</button>
+            </div>
+        </div>
+
+        <!-- المنتج 3 -->
+        <div class="product-card">
+            <div class="image-container">
+                <img src="image_3.png" alt="Hermès Kelly">
+            </div>
+            <div class="product-info">
+                <span class="brand-badge">Hermès</span>
+                <h3 class="product-name" data-ar="حقيبة هيرميس كيلي" data-fr="Sac Style Hermès Kelly">حقيبة هيرميس كيلي</h3>
+                <p class="product-desc" data-ar="حقائب يد بتصميم مستوحى من موديل كيلي الشهير، متوفرة بتشكيلة واسعة من الألوان الرائعة." data-fr="Sacs à main inspirés du style Kelly, disponibles dans une large gamme de couleurs vives.">حقائب يد بتصميم مستوحى من موديل كيلي الشهير، متوفرة بتشكيلة واسعة من الألوان الرائعة.</p>
+                <div class="price-tag">140 DH</div>
+                <button class="btn-order" data-ar="اشتري الآن" data-fr="Commander maintenant">اشتري الآن</button>
+            </div>
+        </div>
+
+        <!-- المنتج 4 -->
+        <div class="product-card">
+            <div class="image-container">
+                <img src="image_4.png" alt="COIH 2DN">
+            </div>
+            <div class="product-info">
+                <span class="brand-badge">COIH 2DN</span>
+                <h3 class="product-name" data-ar="حقيبة يد كوان 2 دي إن" data-fr="Sac à main COIH 2DN">حقيبة يد كوان 2 دي إن</h3>
+                <p class="product-desc" data-ar="حقيبة يد عصرية باللون البني اللامع، تتميز بتصميمها الفريد وحجمها العملي مع قفل ذهبي." data-fr="Sac moderne en couleur marron brillant, caractérisé par son design unique et sa taille pratique.">حقيبة يد عصرية باللون البني اللامع، تتميز بتصميمها الفريد وحجمها العملي مع قفل ذهبي.</p>
+                <div class="price-tag">140 DH</div>
+                <button class="btn-order" data-ar="اشتري الآن" data-fr="Commander maintenant">اشتري الآن</button>
+            </div>
+        </div>
+
+        <!-- المنتج 5 -->
+        <div class="product-card">
+            <div class="image-container">
+                <img src="image_5.png" alt="Louis Vuitton Speedy">
+            </div>
+            <div class="product-info">
+                <span class="brand-badge">Louis Vuitton</span>
+                <h3 class="product-name" data-ar="حقيبة لويس فيتون سبيدي ميني" data-fr="Mini Louis Vuitton Speedy">حقيبة لويس فيتون سبيدي ميني</h3>
+                <p class="product-desc" data-ar="حقائب صغيرة بألوان مميزة تشمل الأسود، الوردي، الجينز، والبني الكلاسيكي مع حزام مزين بالورود." data-fr="Mini sacs disponibles en plusieurs déclinaisons: noir, rose, denim et marron, avec bandoulière fleurie.">حقائب صغيرة بألوان مميزة تشمل الأسود، الوردي، الجينز، والبني الكلاسيكي مع حزام مزين بالورود.</p>
+                <div class="price-tag">140 DH</div>
+                <button class="btn-order" data-ar="اشتري الآن" data-fr="Commander maintenant">اشتري الآن</button>
+            </div>
+        </div>
+
+        <!-- المنتج 6 -->
+        <div class="product-card">
+            <div class="image-container">
+                <img src="image_6.png" alt="Chanel">
+            </div>
+            <div class="product-info">
+                <span class="brand-badge">Chanel</span>
+                <h3 class="product-name" data-ar="حقيبة شانيل كلاسيك" data-fr="Sac Chanel Classic Flap">حقيبة شانيل كلاسيك</h3>
+                <p class="product-desc" data-ar="حقيبة فاخرة باللون الأبيض العاجي المبطن، مزودة بسلسلة ذهبية وقفل لوقو شانيل الشهير." data-fr="Sac de luxe en cuir matelassé blanc cassé, doté d'une chaîne dorée et du fermoir iconique CC.">حقيبة فاخرة باللون الأبيض العاجي المبطن، مزودة بسلسلة ذهبية وقفل لوقو شانيل الشهير.</p>
+                <div class="price-tag">140 DH</div>
+                <button class="btn-order" data-ar="اشتري الآن" data-fr="Commander maintenant">اشتري الآن</button>
+            </div>
+        </div>
+
+        <!-- المنتج 7 -->
+        <div class="product-card">
+            <div class="image-container">
+                <img src="image_7.png" alt="Cartier">
+            </div>
+            <div class="product-info">
+                <span class="brand-badge">Cartier</span>
+                <h3 class="product-name" data-ar="طقم ساعة كارتييه مع أساور" data-fr="Ensemble Montre Cartier">طقم ساعة كارتييه مع أساور</h3>
+                <p class="product-desc" data-ar="طقم يضم ساعة يد نسائية باللون الذهبي بتصميم مربع كلاسيكي، مصحوبة بثلاثة أساور متناسقة." data-fr="Montre pour femme couleur dorée avec cadran carré, accompagnée de trois bracelets assortis.">طقم يضم ساعة يد نسائية باللون الذهبي بتصميم مربع كلاسيكي، مصحوبة بثلاثة أساور متناسقة.</p>
+                <div class="price-tag">140 DH</div>
+                <button class="btn-order" data-ar="اشتري الآن" data-fr="Commander maintenant">اشتري الآن</button>
+            </div>
+        </div>
+
+        <!-- المنتج 8 -->
+        <div class="product-card">
+            <div class="image-container">
+                <img src="image_8.png" alt="Aldo">
+            </div>
+            <div class="product-info">
+                <span class="brand-badge">Aldo</span>
+                <h3 class="product-name" data-ar="حقيبة ألدو بنقشة الزهور" data-fr="Sac Aldo Floral">حقيبة ألدو بنقشة الزهور</h3>
+                <p class="product-desc" data-ar="حقيبة أنيقة باللون الأبيض المزين بنقوش زهور وردية ناعمة، مع مقبض مجدول وسلسلة ذهبية." data-fr="Sac blanc imprimé de motifs floraux roses, avec une poignée tressée et une chaîne dorée.">حقيبة أنيقة باللون الأبيض المزين بنقوش زهور وردية ناعمة، مع مقبض مجدول وسلسلة ذهبية.</p>
+                <div class="price-tag">140 DH</div>
+                <button class="btn-order" data-ar="اشتري الآن" data-fr="Commander maintenant">اشتري الآن</button>
+            </div>
+        </div>
+
+        <!-- المنتج 9 -->
+        <div class="product-card">
+            <div class="image-container">
+                <img src="image_9.png" alt="LOVE Bag">
+            </div>
+            <div class="product-info">
+                <span class="brand-badge">Tote Bag</span>
+                <h3 class="product-name" data-ar="حقيبة كتف لوف الكبيرة" data-fr="Sac Cabas LOVE">حقيبة كتف لوف الكبيرة</h3>
+                <p class="product-desc" data-ar="حقيبة كتف كبيرة وعملية متوفرة باللونين الأبيض والأسود، تتميز بتفاصيل جلدية وشريط ملون." data-fr="Grand sac cabas pratique, doté de détails en cuir marron et d'un ruban coloré inscrit LOVE.">حقيبة كتف كبيرة وعملية متوفرة باللونين الأبيض والأسود، تتميز بتفاصيل جلدية وشريط ملون.</p>
+                <div class="price-tag">140 DH</div>
+                <button class="btn-order" data-ar="اشتري الآن" data-fr="Commander maintenant">اشتري الآن</button>
+            </div>
+        </div>
+
+        <!-- المنتج 10 -->
+        <div class="product-card">
+            <div class="image-container">
+                <img src="image_10.png" alt="Gucci">
+            </div>
+            <div class="product-info">
+                <span class="brand-badge">Gucci</span>
+                <h3 class="product-name" data-ar="حقيبة غوتشي كروس" data-fr="Sac Bandoulière Gucci">حقيبة غوتشي كروس</h3>
+                <p class="product-desc" data-ar="حقيبة كتف بنقشة الشعار الكلاسيكية بالرمادي والأبيض، متميزة بلمسة حزام وشعار برتقالي حيوي." data-fr="Sac bandoulière avec le motif classique, revisité avec une sangle et un logo GG de couleur orange vif.">حقيبة كتف بنقشة الشعار الكلاسيكية بالرمادي والأبيض، متميزة بلمسة حزام وشعار برتقالي حيوي.</p>
+                <div class="price-tag">140 DH</div>
+                <button class="btn-order" data-ar="اشتري الآن" data-fr="Commander maintenant">اشتري الآن</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- السكريبت المسؤول على قلب اللغة والاتجاهات -->
+    <script>
+        let currentLang = 'ar';
+
+        function toggleLanguage() {
+            const html = document.documentElement;
+            const langBtn = document.getElementById('langBtn');
+            const mainTitle = document.getElementById('mainTitle');
+            const shippingBar = document.getElementById('shippingBar');
+            
+            if (currentLang === 'ar') {
+                // تحويل إلى الفرنسية
+                html.setAttribute('lang', 'fr');
+                html.setAttribute('dir', 'ltr');
+                langBtn.innerText = 'العربية';
+                mainTitle.innerText = 'Collection Exclusive';
+                shippingBar.innerText = 'Livraison gratuite à partir de 200 DH';
+                currentLang = 'fr';
+            } else {
+                // تحويل إلى العربية
+                html.setAttribute('lang', 'ar');
+                html.setAttribute('dir', 'rtl');
+                langBtn.innerText = 'Français';
+                mainTitle.innerText = 'المجموعة الحصرية';
+                shippingBar.innerText = 'التوصيل مجاني ابتداءً من 200 درهم';
+                currentLang = 'ar';
+            }
+
+            // تحديث نصوص المنتجات بالكامل
+            document.querySelectorAll('.product-card').forEach(card => {
+                const nameEl = card.querySelector('.product-name');
+                const descEl = card.querySelector('.product-desc');
+                const btnEl = card.querySelector('.btn-order');
+
+                nameEl.innerText = nameEl.getAttribute(`data-${currentLang}`);
+                descEl.innerText = descEl.getAttribute(`data-${currentLang}`);
+                btnEl.innerText = btnEl.getAttribute(`data-${currentLang}`);
+            });
+        }
+    </script>
 </body>
 </html>
-
